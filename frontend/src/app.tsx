@@ -1,33 +1,34 @@
-import { useState } from 'preact/hooks'
-import preactLogo from './assets/preact.svg'
-import viteLogo from '/vite.svg'
-import './app.css'
+import { useState } from 'react'
+import logo from '/logo.svg';
 
-export function App() {
+import './App.css'
+import { MeshGradientRenderer } from '@johnn-e/react-mesh-gradient'
+
+function App() {
   const [count, setCount] = useState(0)
 
   return (
-    <>
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src={viteLogo} class="logo" alt="Vite logo" />
-        </a>
-        <a href="https://preactjs.com" target="_blank">
-          <img src={preactLogo} class="logo preact" alt="Preact logo" />
-        </a>
-      </div>
-      <h1>Vite + Preact</h1>
-      <div class="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/app.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p class="read-the-docs">
-        Click on the Vite and Preact logos to learn more
-      </p>
-    </>
+    <div className="App">
+      <MeshGradientRenderer
+        className="background-gradient"
+        colors={[
+          "#C3E4FF",
+          "#6EC3F4",
+          "#EAE2FF",
+          "#B9BEFF",
+          "#B3B8F9"
+        ]}
+        wireframe
+        speed={0.025}
+      >
+        <div className="container">
+          <div className="title-container">
+            <img src={logo} width="100" height="100" />
+          </div>
+        </div>
+      </MeshGradientRenderer>
+    </div>
   )
 }
+
+export default App
