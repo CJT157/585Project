@@ -1,3 +1,4 @@
 google-cloud-bigquery
 google-cloud-functions
 alpaca
+functions-framework==3.*
