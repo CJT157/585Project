@@ -20,7 +20,7 @@ def get_stock_data(request):
   companies = [] #list of companies to grab
 
   # Request data for these companies from the trade API
-  #snapshots = api.get_snapshots(companies)
+  #bars = api.get_bars(companies)
 
   # Return an HTTP response
   return 'OK'
