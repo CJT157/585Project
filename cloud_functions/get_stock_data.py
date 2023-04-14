@@ -1,4 +1,6 @@
 import functions_framework
+from alpaca_trade_api import REST
+from benzinga import financial_data
 
 """
 gcloud functions deploy YOUR_FUNCTION_NAME \
@@ -10,17 +12,24 @@ gcloud functions deploy YOUR_FUNCTION_NAME \
 TRIGGER_FLAGS
 """
 
-# Register an HTTP function with the Functions Framework
 @functions_framework.http
 def get_stock_data(request):
-  # Your code here
+  
+  # Connect to Alpaca API
   #api = REST(settings.APCA_API_KEY_ID, settings.APCA_API_SECRET_KEY)
 
-  # Fetch all companies from the database
-  companies = [] #list of companies to grab
+  # Connect to Benzinga API
+  #api_key = ""
+  #fin = financial_data.Benzinga(api_key)
+
+  #list of companies to grab
+  companies = []
+
 
   # Request data for these companies from the trade API
   #bars = api.get_bars(companies)
+  #fin.ratings("AAPL")
+
 
   # Return an HTTP response
   return 'OK'
