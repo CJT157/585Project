@@ -13,7 +13,11 @@ schema = [
     bigquery.SchemaField("low_price", "FLOAT", mode="REQUIRED"),
     bigquery.SchemaField("close_price", "FLOAT", mode="REQUIRED"),
     bigquery.SchemaField("volume", "INTEGER", mode="REQUIRED"),
-    bigquery.SchemaField("volume", "INTEGER", mode="REQUIRED"),
+    bigquery.SchemaField("action_pt", "STRING", mode="REQUIRED"),
+    bigquery.SchemaField("action_company", "STRING", mode="REQUIRED"),
+    bigquery.SchemaField("rating_current", "STRING", mode="REQUIRED"),
+    bigquery.SchemaField("pt_current", "FLOAT", mode="REQUIRED"),
+    bigquery.SchemaField("adjusted_pt_current", "FLOAT", mode="REQUIRED"),
 ]
 
 table = bigquery.Table(table_id, schema=schema)
