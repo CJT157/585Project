@@ -1,6 +1,7 @@
 google-cloud-bigquery[pandas]
 google-cloud-functions
 google-cloud-storage
+google-cloud-pubsub
 alpaca-trade-api
 functions-framework==3.*
 git+ssh://git@github.com/Benzinga/benzinga-python-client.git

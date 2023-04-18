@@ -1,9 +1,7 @@
-import functions_framework
 from google.cloud import bigquery, storage
 import json
 
-@functions_framework.http
-def format_table_data(request):
+def table_to_json(data, context):
     
     client_storage = storage.Client(project='cps585finalproject')
     bucket_name = '585_stock_data_bucket'
@@ -15,12 +13,14 @@ def format_table_data(request):
     sql_company = "SELECT * FROM `cps585finalproject.stock_data.company_data`"
     sql_analyst = """
     SELECT * FROM `cps585finalproject.stock_data.analyst_data`
-    LIMIT 19
     """
 
     # query data
     df_company = client_bigquery.query(sql_company).to_dataframe()
     df_analyst = client_bigquery.query(sql_analyst).to_dataframe()
+
+    # remove duplicate companies (we can't delete fresh data from table)
+    df_company = df_company.drop_duplicates(subset=['symbol'])
 
     company_ratings = {}
 
@@ -46,12 +46,13 @@ def format_table_data(request):
                 vals["buy"] += 1.0
         
         # calculate percentage for each rating
-        vals["buy"] = (vals["buy"] / analyst_comp_list["symbol"].count()) * 100
-        vals["hold"] = (vals["hold"] / analyst_comp_list["symbol"].count()) * 100
-        vals["sell"] = (vals["sell"] / analyst_comp_list["symbol"].count()) * 100
+        vals["buy"] = 0 if analyst_comp_list["symbol"].count() == 0 else (vals["buy"] / analyst_comp_list["symbol"].count()) * 100 
+        vals["hold"] = 0 if analyst_comp_list["symbol"].count() == 0 else (vals["hold"] / analyst_comp_list["symbol"].count()) * 100
+        vals["sell"] = 0 if analyst_comp_list["symbol"].count() == 0 else (vals["sell"] / analyst_comp_list["symbol"].count()) * 100
         
         company_ratings[symbol] = vals
 
+    df_company['time'] = df_company['time'].dt.strftime('%Y-%m-%d %H:%M:%S')
     df_company.set_index("symbol", inplace=True)
     final_json = df_company.to_dict(orient='index')
 
@@ -60,7 +61,7 @@ def format_table_data(request):
 
     json_object = json.dumps(final_json, indent=4)
 
-    blob = bucket.blob('stock_data.json')
+    blob = bucket.blob('company_data.json')
 
     blob.upload_from_string(json_object)
 
