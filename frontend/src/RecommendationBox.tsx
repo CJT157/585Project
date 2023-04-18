@@ -56,7 +56,7 @@ const RecommendationBox: React.FunctionComponent<RecommendationBoxProps> = ({ sy
                         </div>
                         <div className="right">
                             <span className={`recommendation ${recommendation?.toLowerCase()}`}>{recommendation}</span>
-                            <span className="accuracy">{sentiment}% Sentiment</span>
+                            <span className="accuracy">{sentiment.toFixed(0)}% Sentiment</span>
                         </div>
                     </div>
                 </div>

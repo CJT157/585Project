@@ -49,6 +49,8 @@
 
 .recommendations {
   width: 40vw;
+  max-height: 60vh;
+  overflow: scroll;
 
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
