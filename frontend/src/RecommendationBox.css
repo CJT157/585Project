@@ -167,3 +167,7 @@
 .sell {
     color: var(--palette-3);
 }
+
+.hold {
+    color: var(--palette-5);
+}

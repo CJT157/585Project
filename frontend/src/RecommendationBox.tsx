@@ -13,10 +13,10 @@ interface RecommendationBoxProps {
     symbol: string;
     currentPrice: number;
     recommendation: string;
-    accuracy: number;
+    sentiment: number;
 }
 
-const RecommendationBox: React.FunctionComponent<RecommendationBoxProps> = ({ symbol, currentPrice, recommendation, accuracy }) => {
+const RecommendationBox: React.FunctionComponent<RecommendationBoxProps> = ({ symbol, currentPrice, recommendation, sentiment }) => {
     const recommendationBoxRef = useRef<HTMLButtonElement>(null);
 
     useEffect(() => {
@@ -55,7 +55,7 @@ const RecommendationBox: React.FunctionComponent<RecommendationBoxProps> = ({ sy
                     </div>
                     <div className="right">
                         <span className={`recommendation ${recommendation?.toLowerCase()}`}>{recommendation}</span>
-                        <span className="accuracy">{accuracy}% Sentiment</span>
+                        <span className="accuracy">{sentiment}% Sentiment</span>
                     </div>
                 </div>
             </div>

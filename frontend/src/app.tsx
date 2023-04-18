@@ -1,3 +1,4 @@
+import React, { useState, useEffect } from 'react';
 import background from '/homepage-bg.svg';
 import './app.css';
 import './RecommendationBox.css';
@@ -6,7 +7,39 @@ import gcloud_logo from '/gcloud.svg';
 import alpaca_logo from '/alpaca.svg';
 import benzinga_logo from '/benzinga.svg';
 
+// Format of the data we get from the API
+type Recommendation = {
+  buy: number;
+  close_price: number;
+  high_price: number;
+  hold: number;
+  low_price: number;
+  open_price: number;
+  sell: number;
+  time: string;
+  volume: number;
+}
+
 function App() {
+
+  const [lastUpdated, setLastUpdated] = useState(undefined);
+  const [recommendations, setRecommendations] = useState([]);
+
+  useEffect(() => {
+
+    const getRecommendations = async () => {
+      const response = await fetch('https://storage.googleapis.com/585_stock_data_bucket/company_data.json', {
+        mode: 'cors'
+      });
+      const data = await response.json();
+      setRecommendations(data);
+    }
+
+    getRecommendations();
+
+  }, []);
+
+  useEffect(() => console.log(recommendations), [recommendations]);
 
   return (
     <div className="App">
@@ -16,10 +49,27 @@ function App() {
           <h1 id="title">Stock Recommendations</h1>
 
           <div className="recommendations">
-            <RecommendationBox symbol="AAPL" currentPrice={166.56} recommendation="BUY" accuracy={70} />
-            <RecommendationBox symbol="TSLA" currentPrice={184.50} recommendation='SELL' accuracy={50} />
-            <RecommendationBox symbol="AMZN" currentPrice={102.72} recommendation='SELL' accuracy={85} />
-            <RecommendationBox symbol="GOOGL" currentPrice={105.61} recommendation='BUY' accuracy={100} />
+            {Object.entries(recommendations).map(([key, recommendation]: [string, Recommendation], index) => {
+
+              const percentSell = recommendation.sell;
+              const percentBuy = recommendation.buy;
+              const percentHold = recommendation.hold;
+
+              let recommendationString: string = "HOLD";
+              let sentiment: number = percentHold;
+
+              if (percentSell > percentBuy && percentSell > percentHold) {
+                recommendationString = "SELL";
+                sentiment = percentSell;
+              } else if (percentBuy > percentSell && percentBuy > percentHold) {
+                recommendationString = "BUY";
+                sentiment = percentBuy;
+              }
+
+              return (
+                <RecommendationBox key={index} symbol={key} currentPrice={recommendation.high_price} recommendation={recommendationString} sentiment={sentiment} />
+              );
+            })}
           </div>
         </div>
       </div>
