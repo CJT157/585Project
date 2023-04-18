@@ -12,8 +12,8 @@ const calculateCursorPosition = (element: HTMLElement, event: MouseEvent) => {
 interface RecommendationBoxProps {
     symbol: string;
     currentPrice: number;
-    recommendation?: string;
-    accuracy?: number;
+    recommendation: string;
+    accuracy: number;
 }
 
 const RecommendationBox: React.FunctionComponent<RecommendationBoxProps> = ({ symbol, currentPrice, recommendation, accuracy }) => {
