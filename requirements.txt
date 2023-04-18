@@ -1,0 +1,6 @@
+google-cloud-bigquery
+google-cloud-functions
+alpaca-trade-api
+functions-framework==3.*
+git+ssh://git@github.com/Benzinga/benzinga-python-client.git
+python-dotenv
