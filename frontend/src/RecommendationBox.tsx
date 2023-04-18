@@ -46,20 +46,22 @@ const RecommendationBox: React.FunctionComponent<RecommendationBoxProps> = ({ sy
     });
 
     return (
-        <button className="recommendation-box" ref={recommendationBoxRef}>
-            <div className="inner">
-                <div className="stock-info">
-                    <div className="left">
-                        <span className="symbol">{symbol}</span>
-                        <span className="current-price">{currencyFormatter.format(currentPrice)}</span>
-                    </div>
-                    <div className="right">
-                        <span className={`recommendation ${recommendation?.toLowerCase()}`}>{recommendation}</span>
-                        <span className="accuracy">{sentiment}% Sentiment</span>
+        <a href={`https://finance.yahoo.com/quote/${symbol}`} className="recommendation-link" target="_blank" rel="noopener noreferrer">
+            <button className="recommendation-box" ref={recommendationBoxRef}>
+                <div className="inner">
+                    <div className="stock-info">
+                        <div className="left">
+                            <span className="symbol">{symbol}</span>
+                            <span className="current-price">{currencyFormatter.format(currentPrice)}</span>
+                        </div>
+                        <div className="right">
+                            <span className={`recommendation ${recommendation?.toLowerCase()}`}>{recommendation}</span>
+                            <span className="accuracy">{sentiment}% Sentiment</span>
+                        </div>
                     </div>
                 </div>
-            </div>
-        </button>
+            </button>
+        </a>
     );
 }
 

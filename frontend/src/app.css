@@ -51,7 +51,7 @@
   width: 40vw;
 
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  grid-template-columns: 350px 350px;
 }
 
 #title {

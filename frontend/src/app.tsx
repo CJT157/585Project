@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import background from '/homepage-bg.svg';
 import './app.css';
 import './RecommendationBox.css';
