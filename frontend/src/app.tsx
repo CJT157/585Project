@@ -6,6 +6,7 @@ import RecommendationBox from './RecommendationBox';
 import gcloud_logo from '/gcloud.svg';
 import alpaca_logo from '/alpaca.svg';
 import benzinga_logo from '/benzinga.svg';
+import site_logo from '/logo.svg';
 
 // Format of the data we get from the API
 type Recommendation = {
@@ -46,6 +47,7 @@ function App() {
       <div className="header">
         <img src={background} width="100%" height="100%" id="background-img" />
         <div className="content">
+          <img src={site_logo} width="150px" height="150px" id="site-logo" />
           <h1 id="title">Stock Recommendations</h1>
 
           <div className="recommendations">
