@@ -26,7 +26,7 @@ def get_stock_data(request):
   fin = financial_data.Benzinga(os.environ.get('BENZINGA_API_SECRET_KEY'))
 
   #list of companies to grab
-  companies = ["MSFT","AAPL","DIS","JNJ"]
+  companies = ["MSFT","AAPL","DIS","JNJ", "AMX", "AMGN", "BA", "CAT", "CSCO", "CVX", "GS", "HD", "HON", "IBM", "INTC", "KO", "JPM", "MCD", "MMM", "MRK", "NKE", "PG", "TRV", "UNH", "CRM", "VZ", "V", "WBA", "WMT", "DIS", "DOW"]
 
   # Request data for these companies from the trade API
   bars = api.get_snapshots(companies)
