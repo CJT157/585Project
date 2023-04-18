@@ -57,11 +57,17 @@ def get_stock_data(request):
 
   # # Insert data into bigquery
 
-  # errors = client.insert_rows_json(table_id, rows_to_insert)  # Make an API request.
-  # if errors == []:
-  #     print("New rows have been added.")
-  # else:
-  #     print("Encountered errors while inserting rows: {}".format(errors))
+  errors = client.insert_rows_json(table_id_company, rows_to_insert_company)  # Make an API request.
+  if errors == []:
+       print("New rows have been added.")
+  else:
+       print("Encountered errors while inserting rows: {}".format(errors))
+
+  errors = client.insert_rows_json(table_id_analyst, rows_to_insert_analyst)  # Make an API request.
+  if errors == []:
+       print("New rows have been added.")
+  else:  
+       print("Encountered errors while inserting rows: {}".format(errors))
 
   # Return an HTTP response
   return 'OK'
