@@ -30,7 +30,7 @@ def get_stock_data(request):
 
      # Request data for these companies from the trade API
      bars = api.get_snapshots(companies)
-     ratings = fin.ratings(pagesize=150, company_tickers="MSFT,AAPL,DIS,JNJ,AMX,AMGN,BA,CAT,CSCO,CVX,GS,HD,HON,IBM,INTC,KO,JPM,MCD,MMM,MRK,NKE,PG,TRV,UNH,CRM,VZ,V,WBA,WMT,DIS,DOW")
+     ratings = fin.ratings(pagesize=250, company_tickers="MSFT,AAPL,DIS,JNJ,AMX,AMGN,BA,CAT,CSCO,CVX,GS,HD,HON,IBM,INTC,KO,JPM,MCD,MMM,MRK,NKE,PG,TRV,UNH,CRM,VZ,V,WBA,WMT,DIS,DOW")
 
      ratings_cleaned = []
 

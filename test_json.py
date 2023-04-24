@@ -2,8 +2,7 @@ from google.cloud import bigquery, storage
 from datetime import datetime
 import json
 
-def table_to_json(data, context):
-    
+def main():
     client_storage = storage.Client(project='cps585finalproject')
     bucket_name = '585_stock_data_bucket'
     bucket = client_storage.get_bucket(bucket_name)
@@ -58,15 +57,17 @@ def table_to_json(data, context):
     for key, val in company_ratings.items():
         final_json[key].update(val)
 
-    final_json['last_updated'] = datetime.now()
+    final_json['last_updated'] = str(datetime.now())
 
     json_object = json.dumps(final_json, indent=4)
 
-    blob = bucket.blob('company_data.json')
+    print(json_object)
 
-    blob.upload_from_string(json_object)
+    # blob = bucket.blob('company_data.json')
 
-    return 'OK'
+    # blob.upload_from_string(json_object)
+
+    # return 'OK'
 
 def translate_rating(rating):
     if rating in ["Sell", "Strong Sell"]:
@@ -79,3 +80,6 @@ def translate_rating(rating):
         return "outperform"
     elif rating in ["Buy", "Strong Buy"]:
         return "buy"
+    
+
+main()
