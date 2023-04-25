@@ -3,9 +3,11 @@ from google.cloud import bigquery
 # Construct a BigQuery client object.
 client = bigquery.Client()
 
+# set table id for both tables
 table_id_company = "cps585finalproject.stock_data.company_data"
 table_id_analyst = "cps585finalproject.stock_data.analyst_data"
 
+# construct schema for both tables
 schema_company = [
     bigquery.SchemaField("symbol", "STRING", mode="REQUIRED"),
     bigquery.SchemaField("time", "DATETIME", mode="REQUIRED"),
@@ -27,11 +29,14 @@ schema_analyst = [
     bigquery.SchemaField("adjusted_pt_current", "FLOAT", mode="REQUIRED"),
 ]
 
+# create tables
 table_company = bigquery.Table(table_id_company, schema=schema_company)
 table_company = client.create_table(table_company)  # Make an API request.
 
 table_analyst = bigquery.Table(table_id_analyst, schema=schema_analyst)
 table_analyst = client.create_table(table_analyst)  # Make an API request.
+
+# log success
 print(
     "Created table {}.{}.{}".format(table_company.project, table_company.dataset_id, table_company.table_id)
 )

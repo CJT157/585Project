@@ -1,5 +1,7 @@
-google-cloud-bigquery
+google-cloud-bigquery[pandas]
 google-cloud-functions
+google-cloud-storage
+google-cloud-pubsub
 alpaca-trade-api
 functions-framework==3.*
 benzinga
