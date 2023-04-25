@@ -3,6 +3,13 @@ from datetime import datetime
 import json
 
 def table_to_json(data, context):
+
+    """
+    Converts data from Bigquery to JSON and uploads to GCS
+
+    Returns:
+        string: success message
+    """
     
     client_storage = storage.Client(project='cps585finalproject')
     bucket_name = '585_stock_data_bucket'
@@ -73,6 +80,14 @@ def table_to_json(data, context):
     return 'OK'
 
 def translate_rating(rating):
+
+    """
+    Translates rating from analyst to buy, outperform, hold, underperform, or sell
+
+    Returns:
+        string: simplified rating
+    """
+
     if rating in ["Sell", "Strong Sell"]:
         return "sell"
     elif rating in ["Underperform", "Underweight", "Moderate Sell", "Weak Hold", "Reduce"]:

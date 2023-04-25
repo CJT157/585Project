@@ -5,18 +5,17 @@ from dotenv import load_dotenv
 from google.cloud import bigquery, pubsub_v1
 import os
 
-"""
-gcloud functions deploy YOUR_FUNCTION_NAME \
-[--gen2] \
---region=YOUR_REGION \
---runtime=YOUR_RUNTIME \
---source=YOUR_SOURCE_LOCATION \
---entry-point=YOUR_CODE_ENTRYPOINT \
-TRIGGER_FLAGS
-"""
-
 @functions_framework.http
 def get_stock_data(request):
+
+     """
+     Gets stock data from Alpaca and Benzinga APIs and sends it to Bigquery
+     Sends a message to a Pub/Sub topic to trigger the next function when done
+
+     Returns:
+         string: string indicating success or failure
+     """
+
      load_dotenv()
 
      # Connect to Alpaca API
@@ -74,6 +73,8 @@ def get_stock_data(request):
           print(f"pubsub message ({future.result()}) sent")
      else:
           print("Encountered errors while inserting rows: {} {}".format(errors_company, errors_analyst))
+          
+          return 'ERROR'
 
      # Return an HTTP response
      return 'OK'
