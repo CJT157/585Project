@@ -13,5 +13,5 @@ dataset.location = "US"
 # Send the dataset to the API for creation, with an explicit timeout.
 # Raises google.api_core.exceptions.Conflict if the Dataset already
 # exists within the project.
-dataset = client.create_dataset(dataset, timeout=30)  # Make an API request.
+dataset = client.create_dataset(dataset, timeout=30)
 print("Created dataset {}.{}".format(client.project, dataset.dataset_id))

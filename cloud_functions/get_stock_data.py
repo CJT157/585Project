@@ -34,6 +34,7 @@ def get_stock_data(request):
 
      ratings_cleaned = []
 
+     # clean up data in case of missing values
      for rating in ratings['ratings']:
           if rating['action_pt'] != "" and rating['action_company'] != "" and rating['rating_current'] != "" and rating['pt_current'] != "" and rating['adjusted_pt_current'] != "":
                ratings_cleaned.append(rating)
@@ -46,7 +47,6 @@ def get_stock_data(request):
 
 
      # Format data in list for bigquery
-
      rows_to_insert_company = [{"symbol": symbol, "time": bars[symbol].daily_bar.t.strftime("%Y-%m-%d %T"), "open_price": bars[symbol].daily_bar.o, 
           "high_price": bars[symbol].daily_bar.h, "low_price": bars[symbol].daily_bar.l, 
           "close_price": bars[symbol].daily_bar.c, "volume": bars[symbol].daily_bar.v} for symbol in bars]
@@ -56,16 +56,17 @@ def get_stock_data(request):
           "adjusted_pt_current": float(rating['adjusted_pt_current'])} for rating in ratings_cleaned]
 
 
-     # # Insert data into bigquery
-
+     # Insert data into bigquery
      errors_company = client.insert_rows_json(table_id_company, rows_to_insert_company)  # Make an API request.
      errors_analyst = client.insert_rows_json(table_id_analyst, rows_to_insert_analyst)  # Make an API request.
      if errors_company == [] and errors_analyst == []:
           print("New rows have been added.")
 
+          # create pub sub client
           publisher = pubsub_v1.PublisherClient()
           topic_path = publisher.topic_path("cps585finalproject", "bigquery_to_json")
 
+          # publish message to pubsub
           data_str = f"db updated"
           data = data_str.encode("utf-8")
           future = publisher.publish(topic_path, data)

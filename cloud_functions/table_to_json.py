@@ -51,15 +51,19 @@ def table_to_json(data, context):
         
         company_ratings[symbol] = vals
 
+    # format datetime data to string
     df_company['time'] = df_company['time'].dt.strftime('%Y-%m-%d %H:%M:%S')
     df_company.set_index("symbol", inplace=True)
     final_json = df_company.to_dict(orient='index')
 
+    # convert ratings to json format
     for key, val in company_ratings.items():
         final_json[key].update(val)
 
+    # add last updated time
     final_json['last_updated'] = datetime.now()
 
+    # post json file to cloud storage
     json_object = json.dumps(final_json, indent=4)
 
     blob = bucket.blob('company_data.json')
