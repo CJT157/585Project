@@ -2,8 +2,9 @@ import functions_framework
 from alpaca_trade_api import REST
 from benzinga import financial_data
 from dotenv import load_dotenv
-from google.cloud import bigquery, pubsub_v1
-import os
+from google.cloud import bigquery, pubsub_v1, storage
+from datetime import datetime
+import os, json
 
 @functions_framework.http
 def get_stock_data(request):
@@ -78,3 +79,78 @@ def get_stock_data(request):
 
      # Return an HTTP response
      return 'OK'
+
+
+def table_to_json(data, context):
+
+    """
+    Converts data from Bigquery to JSON and uploads to GCS
+
+    Returns:
+        string: success message
+    """
+    
+    client_storage = storage.Client(project='cps585finalproject')
+    bucket_name = '585_stock_data_bucket'
+    bucket = client_storage.get_bucket(bucket_name)
+
+    client_bigquery = bigquery.Client()
+
+    # sql for data
+    sql_company = "SELECT * FROM `cps585finalproject.stock_data.company_data`"
+    sql_analyst = "SELECT * FROM `cps585finalproject.stock_data.analyst_data` LIMIT 250"
+
+    # query data
+    df_company = client_bigquery.query(sql_company).to_dataframe()
+    df_analyst = client_bigquery.query(sql_analyst).to_dataframe()
+
+    # remove duplicate companies (we can't delete fresh data from table)
+    df_company = df_company.drop_duplicates(subset=['symbol'])
+
+    company_ratings = {}
+
+    # get rating for each company and add to dictionary
+    for symbol in df_company['symbol']:
+        analyst_comp_list = df_analyst[df_analyst['symbol']==symbol]
+        vals = {"sell": 0, "hold": 0, "buy": 0}
+        for index, row in analyst_comp_list.iterrows():
+            if row['rating_current'] in ["Sell", "Strong Sell"]:
+                vals["sell"] += 1.0
+            elif row['rating_current'] in ["Underperform", "Underweight", "Moderate Sell", "Weak Hold", "Reduce"]:
+                vals["hold"] += .25
+                vals["sell"] += .75
+            elif row['rating_current'] in ["Market Perform", "Equal-Weight", "Neutral", "Hold"]:
+                vals["hold"] += 1.0
+            elif row['rating_current'] in ["Outperform", "Overweight", "Moderate Buy", "Add", "Accumulate"]:
+                vals["hold"] += .25
+                vals["buy"] += .75
+            elif row['rating_current'] in ["Buy", "Strong Buy"]:
+                vals["buy"] += 1.0
+        
+        # calculate percentage for each rating
+        vals["buy"] = 0 if analyst_comp_list["symbol"].count() == 0 else (vals["buy"] / analyst_comp_list["symbol"].count()) * 100 
+        vals["hold"] = 0 if analyst_comp_list["symbol"].count() == 0 else (vals["hold"] / analyst_comp_list["symbol"].count()) * 100
+        vals["sell"] = 0 if analyst_comp_list["symbol"].count() == 0 else (vals["sell"] / analyst_comp_list["symbol"].count()) * 100
+        
+        company_ratings[symbol] = vals
+
+    # format datetime data to string
+    df_company['time'] = df_company['time'].dt.strftime('%Y-%m-%d %H:%M:%S')
+    df_company.set_index("symbol", inplace=True)
+    final_json = df_company.to_dict(orient='index')
+
+    # convert ratings to json format
+    for key, val in company_ratings.items():
+        final_json[key].update(val)
+
+    # add last updated time
+    final_json['last_updated'] = datetime.now()
+
+    # post json file to cloud storage
+    json_object = json.dumps(final_json, indent=4)
+
+    blob = bucket.blob('company_data.json')
+
+    blob.upload_from_string(json_object)
+
+    return 'OK'
