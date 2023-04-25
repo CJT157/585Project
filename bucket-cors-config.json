@@ -1,0 +1,19 @@
+[
+    {
+        "origin": [
+            "http://127.0.0.1:5173"
+        ],
+        "responseHeader": [
+            "X-Requested-With",
+            "Access-Control-Allow-Origin",
+            "Content-Type"
+        ],
+        "method": [
+            "GET",
+            "HEAD",
+            "DELETE",
+            "OPTIONS"
+        ],
+        "maxAgeSeconds": 3600
+    }
+]
