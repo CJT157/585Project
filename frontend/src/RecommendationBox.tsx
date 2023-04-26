@@ -17,15 +17,15 @@ const calculateCursorPosition = (element: HTMLElement, event: MouseEvent) => {
 
 /**
  * Required properties to display a recommendation box.
+ * @param symbol The stock's symbol
+ * @param currentPrice The stock's current price
+ * @param recommendation The stock's recommendation (buy, hold, sell)
+ * @param sentiment The stock's sentiment (what percentage of analysts agree with the recommendation)
  */
 interface RecommendationBoxProps {
-    // The stock's symbol
     symbol: string;
-    // The stock's current price
     currentPrice: number;
-    // The stock's recommendation (buy, hold, sell)
     recommendation: string;
-    // The stock's sentiment (what percentage of analysts agree with the recommendation)
     sentiment: number;
 }
 

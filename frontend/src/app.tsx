@@ -8,25 +8,29 @@ import alpaca_logo from '/alpaca.svg';
 import benzinga_logo from '/benzinga.svg';
 import site_logo from '/logo.svg';
 
-// Format of the data we get from the API
+/**
+ * Format of the data we get from the API
+ * 
+ * @param buy The % of analysts who recommend buying this stock
+ * @param close_price The price of the stock when the market last closed
+ * @param high_price The highest recorded price of the stock today
+ * @param hold The % of analysts who recommend holding this stock
+ * @param low_price The lowest recorded price of the stock today
+ * @param open_price The price of the stock when the market last opened
+ * @param sell The % of analysts who recommend selling this stock
+ * @param time The time the data was last updated
+ * @param volume The total number of shares traded today
+ * 
+*/
 type Recommendation = {
-  // The % of analysts who recommend buying this stock
   buy: number;
-  // The price of the stock when the market last closed
   close_price: number;
-  // The highest recorded price of the stock today
   high_price: number;
-  // The % of analysts who recommend holding this stock
   hold: number;
-  // The lowest recorded price of the stock today
   low_price: number;
-  // The price of the stock when the market last opened
   open_price: number;
-  // The % of analysts who recommend selling this stock
   sell: number;
-  // The time the data was last updated
   time: string;
-  // The total number of shares traded today
   volume: number;
 }
 
@@ -66,24 +70,24 @@ function App() {
               // Skip the lastUpdated key as this is not a stock recommendation
               if (key === "last_updated") return;
 
+              // Calculate the highest percentage recommended and set a string for the recommendation accordingly.
               const percentSell = recommendation.sell;
               const percentBuy = recommendation.buy;
               const percentHold = recommendation.hold;
 
+              // Default to recommend holding the stock
               let recommendationString: string = "HOLD";
               let sentiment: number = percentHold;
 
+              // If the pecent recommended for selling is higher than buying and holding, recommend selling.
               if (percentSell > percentBuy && percentSell > percentHold) {
                 recommendationString = "SELL";
                 sentiment = percentSell;
-              } else if (percentBuy > percentSell && percentBuy > percentHold) {
+              }
+              // If the pecent recommended for buying is higher than selling and holding, recommend buying.
+              else if (percentBuy > percentSell && percentBuy > percentHold) {
                 recommendationString = "BUY";
                 sentiment = percentBuy;
-              }
-
-              if (sentiment === undefined) {
-                console.log(sentiment);
-                console.log(key);
               }
 
               return (
