@@ -10,22 +10,33 @@ import site_logo from '/logo.svg';
 
 // Format of the data we get from the API
 type Recommendation = {
+  // The % of analysts who recommend buying this stock
   buy: number;
+  // The price of the stock when the market last closed
   close_price: number;
+  // The highest recorded price of the stock today
   high_price: number;
+  // The % of analysts who recommend holding this stock
   hold: number;
+  // The lowest recorded price of the stock today
   low_price: number;
+  // The price of the stock when the market last opened
   open_price: number;
+  // The % of analysts who recommend selling this stock
   sell: number;
+  // The time the data was last updated
   time: string;
+  // The total number of shares traded today
   volume: number;
 }
 
 function App() {
 
-  const [lastUpdated, setLastUpdated] = useState(undefined);
+  // The list of recommendations we get from the API
   const [recommendations, setRecommendations] = useState([]);
 
+
+  // Fetch the recommendations from the API and update the state accordingly
   useEffect(() => {
 
     const getRecommendations = async () => {
@@ -40,8 +51,6 @@ function App() {
 
   }, []);
 
-  useEffect(() => console.log(recommendations), [recommendations]);
-
   return (
     <div className="App">
       <div className="header">
@@ -51,7 +60,11 @@ function App() {
           <h1 id="title">Stock Recommendations</h1>
 
           <div className="recommendations">
+            {/* Iterate through each recommendation, calculate the highest percentage recommended, and render a box with the corresponding recommendation */}
             {Object.entries(recommendations).map(([key, recommendation]: [string, Recommendation], index) => {
+
+              // Skip the lastUpdated key as this is not a stock recommendation
+              if (key === "last_updated") return;
 
               const percentSell = recommendation.sell;
               const percentBuy = recommendation.buy;
@@ -68,6 +81,11 @@ function App() {
                 sentiment = percentBuy;
               }
 
+              if (sentiment === undefined) {
+                console.log(sentiment);
+                console.log(key);
+              }
+
               return (
                 <RecommendationBox key={index} symbol={key} currentPrice={recommendation.high_price} recommendation={recommendationString} sentiment={sentiment} />
               );
@@ -75,6 +93,7 @@ function App() {
           </div>
         </div>
       </div>
+      {/* Credits for resources used */}
       <div className="credits">
         <h3>Powered by:</h3>
         <img src={gcloud_logo} width="150px" height="50px" id="gcloud-logo" />

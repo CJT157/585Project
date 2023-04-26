@@ -1,5 +1,11 @@
 import React, { useRef, useEffect } from 'react';
 
+/**
+ * Calculate the position of the cursor relative to the center of the element.
+ * @param element The element to calculate the cursor position relative to
+ * @param event The mouse event which contains the current cursor position
+ * @returns {x: number, y: number}
+ */
 const calculateCursorPosition = (element: HTMLElement, event: MouseEvent) => {
     const rect = element.getBoundingClientRect();
     const centerX = rect.left + rect.width / 2;
@@ -9,16 +15,41 @@ const calculateCursorPosition = (element: HTMLElement, event: MouseEvent) => {
     return { x, y };
 }
 
+/**
+ * Required properties to display a recommendation box.
+ */
 interface RecommendationBoxProps {
+    // The stock's symbol
     symbol: string;
+    // The stock's current price
     currentPrice: number;
+    // The stock's recommendation (buy, hold, sell)
     recommendation: string;
+    // The stock's sentiment (what percentage of analysts agree with the recommendation)
     sentiment: number;
 }
 
+/**
+ * A small box that displays a stock's symbol, current price, recommendation, and sentiment.
+ * @see RecommendationBoxProps
+ * 
+ * -------------------------------
+ * @param symbol The stock's symbol
+ * @param currentPrice The stock's current price
+ * @param recommendation The stock's recommendation (buy, hold, sell)
+ * @param sentiment The stock's sentiment (what percentage of analysts agree with the recommendation)
+ * 
+ * @returns A rounded rectangle with the stock's symbol, current price, recommendation, and sentiment neatly displayed
+ */
 const RecommendationBox: React.FunctionComponent<RecommendationBoxProps> = ({ symbol, currentPrice, recommendation, sentiment }) => {
     const recommendationBoxRef = useRef<HTMLButtonElement>(null);
 
+    /**
+     * Update the position of the cursor on the recommendation box.
+     * This is used to create a rainbow gradient effect on hover.
+     * 
+     * When the component is unmounted (i.e. when the user leaves the page), remove the event listeners.
+     */
     useEffect(() => {
         if (recommendationBoxRef.current) {
             recommendationBoxRef.current.addEventListener('mousemove', (e) => {
@@ -40,12 +71,16 @@ const RecommendationBox: React.FunctionComponent<RecommendationBoxProps> = ({ sy
         }
     });
 
+    /**
+     * Create a locale currency formatter which formats the stock's current price as USD (e.g. $123.45)
+     */
     const currencyFormatter = new Intl.NumberFormat('en-US', {
         style: 'currency',
         currency: 'USD',
     });
 
     return (
+        // Open the stock's Yahoo Finance page in a new tab when the user clicks on the recommendation box
         <a href={`https://finance.yahoo.com/quote/${symbol}`} className="recommendation-link" target="_blank" rel="noopener noreferrer">
             <button className="recommendation-box" ref={recommendationBoxRef}>
                 <div className="inner">
